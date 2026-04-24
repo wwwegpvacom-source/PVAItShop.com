@@ -43,7 +43,7 @@ const blogs = sandbox.blogs || [];
 const gradients = sandbox.gradients || {}; // gradients might be missing or defined elsewhere
 
 // --- URL Configuration ---
-const baseUrl = siteConfig.baseUrl || 'https://realpvashop.com/';
+const baseUrl = siteConfig.baseUrl || 'https://pvaitshop.com/';
 const paths = siteConfig.pathConfig || {
     product: 'product',
     category: 'category',
@@ -121,7 +121,7 @@ function cleanDirectory(dir) {
     }
 }
 
-function generateFooter(products, siteConfig) {
+function generateFooter(products, siteConfig, basePath = '/') {
     // Group products by category
     const categoriesGrouped = {};
     products.forEach(p => {
@@ -143,10 +143,10 @@ function generateFooter(products, siteConfig) {
     }).join('');
 
     const logoContent = siteConfig.logoUrl 
-        ? `<img src="${getImageUrl(siteConfig.logoUrl) || siteConfig.logoUrl}" alt="${siteConfig.logoText || 'Logo'}" class="h-8 w-auto" loading="lazy" decoding="async" width="32" height="32"> <span class="logo-text text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 font-extrabold text-2xl tracking-tight">${siteConfig.logoText || 'realpvashop'}</span>`
+        ? `<img src="${getImageUrl(siteConfig.logoUrl, basePath) || siteConfig.logoUrl}" alt="${siteConfig.logoText || 'Logo'}" class="h-8 w-auto" loading="lazy" decoding="async" width="32" height="32"> <span class="logo-text text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 font-extrabold text-2xl tracking-tight">${siteConfig.logoText || 'pvaitshop'}</span>`
         : `<span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 font-extrabold text-2xl tracking-tight">{{LOGO_TEXT}}</span>`;
 
-    const siteDomain = (siteConfig.siteTitle || 'realpvashop').toLowerCase().replace(/\s+/g, '') + '.com';
+    const siteDomain = (siteConfig.siteTitle || 'pvaitshop').toLowerCase().replace(/\s+/g, '') + '.com';
 
     return `
         <div class="max-w-7xl mx-auto px-4">
@@ -354,11 +354,11 @@ function replaceGlobalPlaceholders(html, siteConfig) {
     output = output.replace(/{{ANALYTICS_SCRIPT}}/g, analyticsScript);
     output = output.replace(/{{ANALYTICS_ID}}/g, siteConfig.analyticsId || '');
     
-    output = output.replace(/{{SITE_TITLE}}/g, siteConfig.siteTitle || 'realpvashop');
-    output = output.replace(/{{SITE_NAME}}/g, siteConfig.siteTitle || 'realpvashop');
-    output = output.replace(/{{SITE_DOMAIN}}/g, (siteConfig.siteTitle || 'realpvashop').toLowerCase().replace(/\s+/g, '') + '.com');
+    output = output.replace(/{{SITE_TITLE}}/g, siteConfig.siteTitle || 'pvaitshop');
+    output = output.replace(/{{SITE_NAME}}/g, siteConfig.siteTitle || 'pvaitshop');
+    output = output.replace(/{{SITE_DOMAIN}}/g, (siteConfig.siteTitle || 'pvaitshop').toLowerCase().replace(/\s+/g, '') + '.com');
     output = output.replace(/{{META_DESCRIPTION}}/g, siteConfig.metaDescription || '');
-    output = output.replace(/{{LOGO_TEXT}}/g, siteConfig.logoText || 'realpvashop');
+    output = output.replace(/{{LOGO_TEXT}}/g, siteConfig.logoText || 'pvaitshop');
     output = output.replace(/{{LOGO_BADGE}}/g, siteConfig.logoBadge || '');
     output = output.replace(/{{FAVICON_URL}}/g, siteConfig.faviconUrl || '/favicon.svg');
     output = output.replace(/{{LOGO_URL}}/g, siteConfig.logoUrl || '/favicon.svg');
@@ -488,7 +488,7 @@ function renderProductCard(product, basePath = '/') {
     const overlayLayerHtml = fullImgUrl ? '' : `<div class="absolute inset-0 ${overlayClass} transition-colors duration-300"></div>`;
     const overlayTextHtml = fullImgUrl ? '' : `
             <div class="absolute top-3 left-3 bg-red-500/90 backdrop-blur-md border border-white/20 text-white text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1 shadow-lg z-10">
-                <span class="text-yellow-300 text-sm">Sale!</span> realpvashop
+                <span class="text-yellow-300 text-sm">Sale!</span> pvaitshop
             </div>
             
             <h3 class="text-xl font-bold leading-tight text-white mb-4 drop-shadow-lg z-10 relative">${overlayTitle}</h3>
@@ -541,7 +541,7 @@ function generateRichDescription(product) {
         <p class="mb-4">
             In the modern world of online business, having a reliable <strong>${productName}</strong> is crucial. 
             Whether you are an entrepreneur, a digital marketer, or a freelancer, verified accounts provide the stability and credibility you need. 
-            At <strong class="text-cyan-600">realpvashop</strong>, we provide premium, fully verified ${productName} that are ready to use. 
+            At <strong class="text-cyan-600">pvaitshop</strong>, we provide premium, fully verified ${productName} that are ready to use. 
             Our accounts are safe, secure, and come with a replacement guarantee.
         </p>
 
@@ -576,7 +576,7 @@ function generateRichDescription(product) {
 
         <h3 class="text-lg font-bold text-slate-900 mb-3 mt-8">Conclusion</h3>
         <p class="mb-4">
-            In conclusion, buying a ${productName} from realpvashop is a smart investment for your digital growth. 
+            In conclusion, buying a ${productName} from pvaitshop is a smart investment for your digital growth. 
             Save time, avoid hassles, and focus on scaling your business while we handle the technicalities. 
             Order your ${productName} today and experience the difference!
         </p>
@@ -709,7 +709,7 @@ indexHtml = indexHtml.replace('{{PRODUCT_GRID}}', `
 `);
 
 // Generate Footer
-indexHtml = indexHtml.replace('{{FOOTER}}', generateFooter(products, siteConfig));
+indexHtml = indexHtml.replace('{{FOOTER}}', generateFooter(products, siteConfig, '/'));
 
 // Generate Latest Articles
 indexHtml = indexHtml.replace('{{LATEST_ARTICLES}}', generateLatestArticlesHtml(blogs));
@@ -722,7 +722,7 @@ const homepagePreload = products.slice(0, 2).map(p => `<link rel="preload" href=
 indexHtml = indexHtml.replace('{{PRODUCT_IMAGE_PRELOAD}}', homepagePreload);
 
 // Global Placeholders
-indexHtml = indexHtml.replace(/{{CANONICAL_URL}}/g, 'https://realpvashop.com/');
+indexHtml = indexHtml.replace(/{{CANONICAL_URL}}/g, 'https://pvaitshop.com/');
 indexHtml = replaceGlobalPlaceholders(indexHtml, siteConfig);
 
 // Save Homepage
@@ -738,7 +738,7 @@ sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
 // Add Homepage to Sitemap
 sitemap += '  <url>\n';
-sitemap += '    <loc>https://realpvashop.com/</loc>\n';
+sitemap += '    <loc>https://pvaitshop.com/</loc>\n';
 sitemap += '    <lastmod>' + new Date().toISOString().split('T')[0] + '</lastmod>\n';
 sitemap += '    <priority>1.0</priority>\n';
 sitemap += '  </url>\n';
@@ -763,7 +763,7 @@ uniqueCategories.forEach(cat => {
     catHtml = catHtml.replace('{{HEADER}}', generateFullHeader('../../', products, categories, siteConfig));
     
     // SEO & Hero
-    const catTitle = `${cat} Accounts & Reviews | realpvashop`;
+    const catTitle = `${cat} Accounts & Reviews | pvaitshop`;
     
     // Replace Category Options
     catHtml = catHtml.replace('{{CATEGORY_OPTIONS}}', categoryOptions);
@@ -809,7 +809,7 @@ uniqueCategories.forEach(cat => {
     catHtml = catHtml.replace('{{LATEST_ARTICLES}}', generateLatestArticlesHtml(blogs));
     
     // Footer
-    catHtml = catHtml.replace('{{FOOTER}}', generateFooter(products, siteConfig).replace(new RegExp(`href="/${paths.product}`, 'g'), `href="../../${paths.product}`).replace(/href="#"/g, 'href="../../"'));
+    catHtml = catHtml.replace('{{FOOTER}}', generateFooter(products, siteConfig, '../../').replace(new RegExp(`href="/${paths.product}`, 'g'), `href="../../${paths.product}`).replace(/href="#"/g, 'href="../../"'));
 
     // CSS
     catHtml = catHtml.replace(/{{CRITICAL_CSS}}/g, `<style>${cssContent}</style>`);
@@ -1032,13 +1032,13 @@ for (let i = 1; i <= totalPages; i++) {
     blogListHtml = blogListHtml.replace('{{CATEGORY_OPTIONS}}', categoryOptions);
 
     const pageTitleSuffix = i > 1 ? ` - Page ${i}` : '';
-    const blogTitle = `realpvashop Blog – Digital Marketing Tips${pageTitleSuffix}`;
-    const blogDesc = 'Unlock the secrets of digital marketing. Expert strategies, safety tips, and growth hacks for your business.';
+    const blogTitle = `pvaitshop Blog – Insights & Digital Strategy${pageTitleSuffix}`;
+    const blogDesc = 'Expert guides, industry updates, and actionable strategies to help you navigate account management and boost your online credibility.';
 
     // Enhanced Hero for Blog
     blogListHtml = blogListHtml.replace('{{HERO_TITLE}}', `
-        <span class="block text-cyan-600 text-lg font-bold tracking-widest uppercase mb-4">Our Blog</span>
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 drop-shadow-sm">Latest Insights & Guides</span>${pageTitleSuffix}
+        <span class="block text-cyan-600 text-lg font-bold tracking-widest uppercase mb-4">Insights & Strategy</span>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 drop-shadow-sm">Master the Digital Landscape</span>${pageTitleSuffix}
     `);
     blogListHtml = blogListHtml.replace('{{HERO_SUBTITLE}}', blogDesc);
     
@@ -1116,7 +1116,7 @@ for (let i = 1; i <= totalPages; i++) {
     blogListHtml = blogListHtml.replace('{{PRODUCT_IMAGE_PRELOAD}}', '');
 
     // Footer & Links
-    blogListHtml = blogListHtml.replace('{{FOOTER}}', generateFooter(products, siteConfig));
+    blogListHtml = blogListHtml.replace('{{FOOTER}}', generateFooter(products, siteConfig, pageRelPath));
     blogListHtml = blogListHtml.replace(/{{CRITICAL_CSS}}/g, `<style>${cssContent}</style>`);
     
     // Global Placeholders
@@ -1181,12 +1181,12 @@ blogs.forEach((post, index) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${post.title} - realpvashop</title>
+    <title>${post.title} - pvaitshop</title>
     <meta name="description" content="${blogMetaDescription}">
     <meta name="keywords" content="${blogKeywords}">
     <link rel="canonical" href="${getDynamicUrl('blog', post.slug)}" />
     <meta name="robots" content="index, follow" />
-    <meta property="og:title" content="${post.title} - realpvashop">
+    <meta property="og:title" content="${post.title} - pvaitshop">
     <meta property="og:description" content="${blogMetaDescription}">
     <meta property="og:url" content="${getDynamicUrl('blog', post.slug)}">
     <meta property="og:type" content="article">
@@ -1194,7 +1194,7 @@ blogs.forEach((post, index) => {
     <meta property="article:modified_time" content="${post.updated_at || post.published_at || new Date().toISOString().split('T')[0]}">
     ${blogImageUrl ? `<meta property="og:image" content="${blogImageUrl}">` : ''}
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="${post.title} - realpvashop">
+    <meta name="twitter:title" content="${post.title} - pvaitshop">
     <meta name="twitter:description" content="${blogMetaDescription}">
     ${blogImageUrl ? `<meta name="twitter:image" content="${blogImageUrl}">` : ''}
     <script type="application/ld+json">${JSON.stringify(articleSchema)}</script>
@@ -1276,7 +1276,7 @@ blogs.forEach((post, index) => {
     </main>
 
     <footer class="bg-white border-t border-slate-200 py-6 mt-12">
-        ${generateFooter(products, siteConfig).replace(new RegExp(`href="/${paths.product}`, 'g'), `href="../../${paths.product}`).replace(/href="#"/g, 'href="../../"')}
+        ${generateFooter(products, siteConfig, '../../').replace(new RegExp(`href="/${paths.product}`, 'g'), `href="../../${paths.product}`).replace(/href="#"/g, 'href="../../"')}
     </footer>
 
     <!-- Scripts -->
@@ -1350,7 +1350,7 @@ products.forEach(product => {
         const relOverlayLayerHtml = relImgUrl ? '' : `<div class="absolute inset-0 ${relOverlayClass} transition-colors duration-300"></div>`;
         const relOverlayTextHtml = relImgUrl ? '' : `
                     <div class="absolute top-2 left-2 bg-red-500/90 backdrop-blur-md border border-white/10 text-xs font-bold px-3 py-1 rounded flex gap-1 z-10">
-                        <span class="text-yellow-300 text-sm">Sale!</span> realpvashop
+                        <span class="text-yellow-300 text-sm">Sale!</span> pvaitshop
                     </div>
                     <h3 class="font-bold text-lg leading-tight mb-2 px-2 drop-shadow-md z-10 relative text-white">${p.display_title || p.title.replace(/^Buy\s+/i, '')}</h3>
                     <div class="bg-white/10 hover:bg-white/20 text-xs font-bold px-4 py-1.5 rounded-full cursor-pointer transition-colors border border-white/20 z-10 text-white">GET STARTED</div>
@@ -1416,7 +1416,7 @@ products.forEach(product => {
         "name": product.title,
         "description": product.meta_description || product.short_description,
         "sku": String(product.id),
-        "brand": { "@type": "Brand", "name": "realpvashop" },
+        "brand": { "@type": "Brand", "name": "pvaitshop" },
         "offers": {
             "@type": "AggregateOffer",
             "priceCurrency": "USD",
@@ -1438,12 +1438,12 @@ products.forEach(product => {
     html = html.replace('{{HEADER}}', generateFullHeader('../../', products, categories, siteConfig));
 
     // SEO
-    const seoTitle = `${product.title} – Verified & Fast | realpvashop`;
+    const seoTitle = `${product.title} – Verified & Fast | pvaitshop`;
     let seoDesc = product.meta_description || product.short_description || `Buy ${product.title} instantly.`;
     
     // Ensure Description Length (120-160 chars)
     if (seoDesc.length < 120) {
-        seoDesc += " Get high-quality verified accounts instantly at realpvashop. Secure, fast, and reliable service with 24/7 support.";
+        seoDesc += " Get high-quality verified accounts instantly at pvaitshop. Secure, fast, and reliable service with 24/7 support.";
     }
     if (seoDesc.length > 160) {
         seoDesc = seoDesc.substring(0, 157) + "...";
@@ -1505,7 +1505,7 @@ products.forEach(product => {
     // Inline Critical CSS
     html = html.replace(/{{CRITICAL_CSS}}/g, `<style>${productCssContent}</style>`);
 
-    html = html.replace('{{FOOTER}}', generateFooter(products, siteConfig));
+    html = html.replace('{{FOOTER}}', generateFooter(products, siteConfig, '../../'));
 
     html = html.replace('{{SITE_CONFIG_JS}}', ''); // Remove placeholder, siteConfig is in site_data.js
 
@@ -1623,9 +1623,9 @@ sitemapPageHtml = sitemapPageHtml.replace('{{HERO_SUBTITLE}}', 'Explore our comp
 sitemapPageHtml = sitemapPageHtml.replace('{{PRODUCT_IMAGE_PRELOAD}}', '');
 sitemapPageHtml = sitemapPageHtml.replace('{{PRODUCT_GRID}}', sitemapHtmlContent);
 sitemapPageHtml = sitemapPageHtml.replace('{{LATEST_ARTICLES}}', ''); // Clear latest articles section
-sitemapPageHtml = sitemapPageHtml.replace('{{FOOTER}}', generateFooter(products, siteConfig));
+sitemapPageHtml = sitemapPageHtml.replace('{{FOOTER}}', generateFooter(products, siteConfig, './'));
 sitemapPageHtml = sitemapPageHtml.replace(/{{CRITICAL_CSS}}/g, `<style>${cssContent}</style>`);
-sitemapPageHtml = sitemapPageHtml.replace(/realpvashop – Buy Verified Accounts & Reviews Instantly/g, 'Sitemap | realpvashop');
+sitemapPageHtml = sitemapPageHtml.replace(/pvaitshop – Buy Verified Accounts & Reviews Instantly/g, 'Sitemap | pvaitshop');
 
 // Important: Replace all global placeholders in sitemap page too
 sitemapPageHtml = replaceGlobalPlaceholders(sitemapPageHtml, siteConfig);
